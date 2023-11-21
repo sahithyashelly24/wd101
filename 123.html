@@ -1,0 +1,117 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WD101 Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        body{
+            background-image: url(https://image.slidesdocs.com/responsive-images/docs/white-forest-with-circular-dark-green-leaf-border-page-border-background-word-template_86d2fd3547__1131_1600.jpg);
+            background-size: cover; 
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+
+    <form id="userForm" onsubmit="submitForm(); return false;" class="max-w-md mx-auto bg-white p-6 rounded-md shadow-md">
+        <div class="mb-4">
+            <label for="name" class="block text-sm font-medium text-gray-600">Name:</label>
+            <input type="text" id="name" required class="mt-1 p-2 w-full border rounded-md">
+        </div>
+
+        <div class="mb-4">
+            <label for="email" class="block text-sm font-medium text-gray-600">Email:</label>
+            <input type="email" id="email" required class="mt-1 p-2 w-full border rounded-md">
+        </div>
+
+        <div class="mb-4">
+            <label for="age" class="block text-sm font-medium text-gray-600">Age:</label>
+            <input type="date" id="age" required class="mt-1 p-2 w-full border rounded-md">
+        </div>
+
+        <div class="mb-4">
+            <input type="checkbox" id="terms" required class="mr-2">
+            <label for="terms" id="ok" class="text-sm text-gray-600">I accept the terms and conditions</label>
+        </div>
+
+        <button type="submit" class="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300">Submit</button>
+    </form>
+
+    <h2 class="mt-8 text-xl font-semibold">User Details</h2>
+    <table id="userTable" class="mt-4 bg-white rounded-md overflow-hidden shadow-md">
+        <tr>
+            <th class="py-2 px-4 bg-gray-200">Name</th>
+            <th class="py-2 px-4 bg-gray-200">Email</th>
+            <th class="py-2 px-4 bg-gray-200">Age</th>
+            <th class="py-2 px-4 bg-gray-200">agree Terms and conditions</th>
+        </tr>
+    </table>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const storedUserData = localStorage.getItem('userData');
+            if (storedUserData) {
+                const userData = JSON.parse(storedUserData);
+                displayUserDetails(userData);
+            }
+        });
+
+        function submitForm() {
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const age = document.getElementById("age").value;
+
+            const birthDate = new Date(age);
+            const currentDate = new Date();
+            const ageDiff = currentDate.getFullYear() - birthDate.getFullYear();
+            
+            if (ageDiff < 18 || ageDiff > 55) {
+                alert("Age must be between 18 and 55 years.");
+                return;
+            }
+
+            const termsCheckbox = document.getElementById("terms");
+            if (!termsCheckbox.checked) {
+                alert("Please accept the terms and conditions.");
+                return;
+            }
+
+            const userData = { name, email, age };
+            localStorage.setItem('userData', JSON.stringify(userData));
+
+            displayUserDetails(userData);
+        }
+
+        function displayUserDetails(userData) {
+            const userTable = document.getElementById("userTable");
+            const row = userTable.insertRow(-1);
+
+            const cell1 = row.insertCell(0);
+            const cell2 = row.insertCell(1);
+            const cell3 = row.insertCell(2);
+            const cell4 = row.insertCell(3);
+
+            cell1.innerHTML = userData.name;
+            cell2.innerHTML = userData.email;
+            cell3.innerHTML = userData.age;
+            cell4.innerHTML = "true";
+        }
+    </script>
+
+</body>
+</html>
